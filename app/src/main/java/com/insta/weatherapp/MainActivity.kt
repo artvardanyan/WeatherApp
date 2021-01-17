@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
+import com.insta.weatherapp.databinding.ActivityMainBinding
 import org.json.JSONObject
 import java.net.URL
 import java.text.SimpleDateFormat
@@ -17,10 +18,15 @@ class MainActivity : AppCompatActivity() {
 
     val city: String = "Yerevan, Arm"
     val api: String = "e068bf6a0f7e43e8da2f5c9cd526e5b6\n"
+    private lateinit var binding: ActivityMainBinding
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        //setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
 
         WeatherTask().execute()
 
@@ -31,9 +37,9 @@ class MainActivity : AppCompatActivity() {
         override fun onPreExecute() {
             super.onPreExecute()
 
-            findViewById<ProgressBar>(R.id.loader).visibility = View.VISIBLE
-            findViewById<RelativeLayout>(R.id.mainContainer).visibility = View.GONE
-            findViewById<TextView>(R.id.errorText).visibility = View.GONE
+            binding.loader.visibility = View.VISIBLE
+            binding.mainContainer.visibility = View.GONE
+            binding.errorText.visibility = View.GONE
         }
 
         override fun doInBackground(vararg params: String?): String? {
@@ -73,25 +79,25 @@ class MainActivity : AppCompatActivity() {
                 val weatherDescription = weather.getString("description")
                 val address = jsonObj.getString("name") + ", " + sys.getString("country")
                 /* Populating extracted data into our views */
-                findViewById<TextView>(R.id.address).text = address
-                findViewById<TextView>(R.id.updated_at).text = updatedAtText
-                findViewById<TextView>(R.id.status).text = weatherDescription.capitalize()
-                findViewById<TextView>(R.id.temp).text = temp
-                findViewById<TextView>(R.id.temp_min).text = tempMin
-                findViewById<TextView>(R.id.temp_max).text = tempMax
-                findViewById<TextView>(R.id.sunrise).text =
+                binding.address.text = address
+                binding.updatedAt.text = updatedAtText
+                binding.status.text = weatherDescription.capitalize()
+                binding.temp.text = temp
+                binding.tempMin.text = tempMin
+                binding.tempMax.text = tempMax
+                binding.sunrise.text =
                     SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(Date(sunrise * 1000))
-                findViewById<TextView>(R.id.sunset).text =
+                binding.sunset.text =
                     SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(Date(sunset * 1000))
-                findViewById<TextView>(R.id.wind).text = windSpeed
-                findViewById<TextView>(R.id.pressure).text = pressure
-                findViewById<TextView>(R.id.humidity).text = humidity
+                binding.wind.text = windSpeed
+                binding.pressure.text = pressure
+                binding.humidity.text = humidity
 
-                findViewById<ProgressBar>(R.id.loader).visibility = View.GONE
-                findViewById<RelativeLayout>(R.id.mainContainer).visibility = View.VISIBLE
+                binding.loader.visibility = View.GONE
+                binding.mainContainer.visibility = View.VISIBLE
             } catch (e: Exception) {
-                findViewById<ProgressBar>(R.id.loader).visibility = View.GONE
-                findViewById<TextView>(R.id.errorText).visibility = View.VISIBLE
+                binding.loader.visibility = View.GONE
+                binding.errorText.visibility = View.VISIBLE
             }
         }
     }
